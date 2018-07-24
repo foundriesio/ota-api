@@ -25,3 +25,9 @@ def get(name):
 def packages(name):
     user = current_app.OTAUser()
     return jsonify(user.device_packages(name))
+
+
+@blueprint.route('/<name>/updates/')
+def updates(name):
+    user = current_app.OTAUser()
+    return jsonify(user.device_updates(name))

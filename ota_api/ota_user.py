@@ -51,6 +51,11 @@ class OTAUserBase(object):
         limit = request.args.get('limit', 50)
         return api.device_packages(d, offset, limit)
 
+    def device_updates(self, name):
+        api, d = self._get(name)
+        u = api.device_updates(d)
+        return sorted(u, reverse=True, key=lambda x: x['custom']['updatedAt'])
+
 
 class UnsafeUser(OTAUserBase):
     """An unsafe example of implementing the OTAUserBase class."""
