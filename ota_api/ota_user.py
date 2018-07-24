@@ -60,6 +60,10 @@ class OTAUserBase(object):
         api, d = self._get(name)
         return api.device_update(d, image_hash)
 
+    def device_enable_autoupdates(self, name, enabled):
+        api, d = self._get(name)
+        api.device_autoupdates_set(d, enabled)
+
 
 class UnsafeUser(OTAUserBase):
     """An unsafe example of implementing the OTAUserBase class."""

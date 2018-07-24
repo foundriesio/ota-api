@@ -48,3 +48,16 @@ def update(name):
 
     user = current_app.OTAUser()
     return jsonify(user.device_update(name, image['hash']))
+
+
+@blueprint.route('/<name>/', methods=('PATCH',))
+def patch(name):
+    data = request.get_json() or {}
+
+    enabled = data.get('auto-updates', None)
+    if enabled is not None:
+        user = current_app.OTAUser()
+        return jsonify(user.device_enable_autoupdates(name, enabled))
+
+    message = 'Input must include "auto-updates" attribute'
+    abort(make_response(jsonify(message=message), 400))
