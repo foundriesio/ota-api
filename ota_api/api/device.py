@@ -13,3 +13,9 @@ def list():
     if maxd != -1:
         r.headers['X-MAX-DEVICES'] = maxd
     return r
+
+
+@blueprint.route('/<name>/')
+def get(name):
+    user = current_app.OTAUser()
+    return jsonify(user.device_get(name))
