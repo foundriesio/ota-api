@@ -1,6 +1,8 @@
 # Copyright (C) 2018 Foundries.io
 # Author: Andy Doan <andy@foundries.io>
-from flask import Blueprint, current_app, jsonify
+from flask import (
+    Blueprint, abort, current_app, jsonify, make_response, request
+)
 
 blueprint = Blueprint('devices', __name__, url_prefix='/devices')
 
@@ -31,3 +33,18 @@ def packages(name):
 def updates(name):
     user = current_app.OTAUser()
     return jsonify(user.device_updates(name))
+
+
+@blueprint.route('/<name>/', methods=('PUT',))
+def update(name):
+    data = request.get_json() or {}
+    image = data.get('image')
+    if not image:
+        message = 'Missing required field: "image"'
+        abort(make_response(jsonify(message=message), 400))
+    if 'hash' not in image:
+        message = 'Missing required field: "image[hash]"'
+        abort(make_response(jsonify(message=message), 400))
+
+    user = current_app.OTAUser()
+    return jsonify(user.device_update(name, image['hash']))

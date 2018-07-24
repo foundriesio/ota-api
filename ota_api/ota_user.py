@@ -56,6 +56,10 @@ class OTAUserBase(object):
         u = api.device_updates(d)
         return sorted(u, reverse=True, key=lambda x: x['custom']['updatedAt'])
 
+    def device_update(self, name, image_hash):
+        api, d = self._get(name)
+        return api.device_update(d, image_hash)
+
 
 class UnsafeUser(OTAUserBase):
     """An unsafe example of implementing the OTAUserBase class."""
