@@ -45,6 +45,12 @@ class OTAUserBase(object):
             d['autoUpdates'] = False
         return d
 
+    def device_packages(self, name):
+        api, d = self._get(name)
+        offset = request.args.get('offset', 0)
+        limit = request.args.get('limit', 50)
+        return api.device_packages(d, offset, limit)
+
 
 class UnsafeUser(OTAUserBase):
     """An unsafe example of implementing the OTAUserBase class."""
