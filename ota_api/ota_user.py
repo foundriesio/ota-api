@@ -1,8 +1,12 @@
 # Copyright (C) 2018 Foundries.io
 # Author: Andy Doan <andy@foundries.io>
+import string
+
 from flask import abort, jsonify, make_response, request
 
 from ota_api.ota_ce import OTACommunityEditionAPI
+
+VALID_DEVICE_CHAR = set(string.ascii_letters + string.digits + '-' + '_' + '/')
 
 
 class OTAUserBase(object):
@@ -63,6 +67,14 @@ class OTAUserBase(object):
     def device_enable_autoupdates(self, name, enabled):
         api, d = self._get(name)
         api.device_autoupdates_set(d, enabled)
+
+    def device_rename(self, name, new_name):
+        api, d = self._get(name)
+        bad = set(new_name) - VALID_DEVICE_CHAR
+        if bad:
+            message = 'Invalid device name. Invalid characters: %r' % bad
+            abort(make_response(jsonify(message=message), 400))
+        api.device_rename(d, new_name)
 
 
 class UnsafeUser(OTAUserBase):

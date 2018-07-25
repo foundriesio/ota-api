@@ -54,6 +54,10 @@ def update(name):
 def patch(name):
     data = request.get_json() or {}
 
+    new_name = data.get('name')
+    if new_name:
+        return jsonify(current_app.OTAUser().device_rename(name, new_name))
+
     enabled = data.get('auto-updates', None)
     if enabled is not None:
         user = current_app.OTAUser()
