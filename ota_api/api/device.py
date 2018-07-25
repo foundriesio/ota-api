@@ -65,3 +65,9 @@ def patch(name):
 
     message = 'Input must include "auto-updates" attribute'
     abort(make_response(jsonify(message=message), 400))
+
+
+@blueprint.route('/<name>/', methods=('DELETE',))
+def delete(name):
+    current_app.OTAUser().device_delete(name)
+    return jsonify({})

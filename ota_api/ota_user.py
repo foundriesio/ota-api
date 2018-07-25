@@ -76,6 +76,10 @@ class OTAUserBase(object):
             abort(make_response(jsonify(message=message), 400))
         api.device_rename(d, new_name)
 
+    def device_delete(self, name):
+        api, d = self._get(name)
+        api.device_delete(d)
+
 
 class UnsafeUser(OTAUserBase):
     """An unsafe example of implementing the OTAUserBase class."""
