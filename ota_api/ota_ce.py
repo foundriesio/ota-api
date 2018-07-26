@@ -166,6 +166,16 @@ class OTACommunityEditionAPI(object):
     def device_delete(self, device):
         self.registry.delete('/api/v1/devices/' + device['uuid'])
 
+    def device_create(self, name, uuid, client_pem):
+        data = {
+            'deviceUuid': uuid,
+            'deviceId': name,
+            'deviceName': name,
+            'deviceType': 'Other',
+            'credentials': client_pem,
+        }
+        self.registry.post('/api/v1/devices', json=data)
+
     def device_rename(self, device, new_name):
         data = {
             'deviceName': new_name,

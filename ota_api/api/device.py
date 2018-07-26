@@ -71,3 +71,35 @@ def patch(name):
 def delete(name):
     current_app.OTAUser().device_delete(name)
     return jsonify({})
+
+
+def _require_keys(dictionary, keys):
+    missing = []
+    for k in keys:
+        try:
+            yield dictionary[k]
+        except KeyError:
+            missing.append(k)
+    if missing:
+        message = 'Missing field(s): %s' % ', '.join(missing)
+        abort(make_response(jsonify(message=message), 400))
+
+
+@blueprint.route('/', methods=('POST',))
+def post():
+    data = request.get_json() or {}
+    name, uuid, csr, hwid = _require_keys(
+        data, ('name', 'uuid', 'csr', 'hardware-id'))
+
+    user = current_app.OTAUser()
+
+    user.assert_device_quota()
+    client_pem = user.device_cert_create(name, uuid, csr)
+    user.device_create(name, uuid, client_pem)
+    r = jsonify({
+        'roo.crt': user.server_ca,
+        'sota.toml': user.device_toml(hwid),
+        'client.pem': client_pem,
+    })
+    r.status_code = 201
+    return r
