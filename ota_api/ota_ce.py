@@ -117,6 +117,9 @@ class OTACommunityEditionAPI(object):
     def device_updates(self, device):
         targets = self.tuf_targets()
         image = self.device_image(device)
+        if not image:
+            # The device has yet to be seen
+            return
         image_hash = image['image']['hash']['sha256']
         for target in targets.values():
             if image['hardwareId'] in target['custom']['hardwareIds']:
