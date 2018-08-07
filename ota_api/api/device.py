@@ -97,7 +97,7 @@ def post():
     client_pem = user.device_cert_create(name, uuid, csr)
     user.device_create(name, uuid, client_pem)
     r = jsonify({
-        'roo.crt': user.server_ca,
+        'root.crt': user.server_ca,
         'sota.toml': user.device_toml(hwid),
         'client.pem': client_pem,
     })
