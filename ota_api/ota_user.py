@@ -35,17 +35,13 @@ ostree_server = "{gateway_server}/treehub"
 packages_file = "/usr/package.manifest"
 
 [storage]
-type = "filesystem"
+type = "sqlite"
 path = "/var/sota/"
-uptane_metadata_path = "metadata"
-uptane_private_key_path = "ecukey.der"
-uptane_public_key_path = "ecukey.pub"
-tls_cacert_path = "root.crt"
-tls_pkey_path = "pkey.pem"
-tls_clientcert_path = "client.pem"
 
 [import]
 tls_cacert_path = "/var/sota/root.crt"
+tls_pkey_path = "/var/sota/pkey.pem"
+tls_clientcert_path = "/var/sota/client.pem"
 '''
 
 
