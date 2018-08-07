@@ -10,23 +10,6 @@ from ota_api.settings import GATEWAY_SERVER
 VALID_DEVICE_CHAR = set(string.ascii_letters + string.digits + '-' + '_' + '/')
 
 SOTA_TOML_FMT = '''
-[gateway]
-http = true
-socket = false
-
-[network]
-socket_commands_path = "/tmp/sota-commands.socket"
-socket_events_path = "/tmp/sota-events.socket"
-socket_events = "DownloadComplete, DownloadFailed"
-
-[p11]
-module = ""
-pass = ""
-uptane_key_id = ""
-tls_ca_id = ""
-tls_pkey_id = ""
-tls_clientcert_id = ""
-
 [tls]
 server = "{gateway_server}"
 ca_source = "file"
@@ -35,24 +18,19 @@ cert_source = "file"
 
 [provision]
 server = "{gateway_server}"
+primary_ecu_hardware_id = "{hardware_id}"
 p12_password = ""
 expiry_days = "36000"
 provision_path = ""
 
 [uptane]
 polling = true
-polling_sec = 10
-device_id = ""
-primary_ecu_serial = ""
-primary_ecu_hardware_id = "{hardware_id}"
 director_server = "{gateway_server}/director"
 repo_server = "{gateway_server}/repo"
 key_source = "file"
 
 [pacman]
 type = "ostree"
-os = ""
-sysroot = ""
 ostree_server = "{gateway_server}/treehub"
 packages_file = "/usr/package.manifest"
 
@@ -67,11 +45,7 @@ tls_pkey_path = "pkey.pem"
 tls_clientcert_path = "client.pem"
 
 [import]
-uptane_private_key_path = ""
-uptane_public_key_path = ""
 tls_cacert_path = "/var/sota/root.crt"
-tls_pkey_path = ""
-tls_clientcert_path = ""
 '''
 
 
