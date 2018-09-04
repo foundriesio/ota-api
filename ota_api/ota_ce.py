@@ -64,10 +64,10 @@ class OTACommunityEditionAPI(object):
                 break
 
     def device_get(self, name):
-        params = {'deviceId': name}
+        params = {'regex': '^' + name + '$'}
         data = self.registry.get('/api/v1/devices', params=params).json()
-        if data:
-            return data[0]
+        if data['values']:
+            return data['values'][0]
 
     def device_image(self, device):
         if device['deviceStatus'] == 'NotSeen':
