@@ -28,10 +28,11 @@ class _Server(object):
             kwargs['headers'] = {}
         kwargs['headers']['x-ats-namespace'] = self._namespace
 
-        resp = method(self._base + resource, *args, **kwargs)
         expected = 200
         if method.__name__ == 'post':
             expected = 201
+        expected = kwargs.pop('expected', expected)
+        resp = method(self._base + resource, *args, **kwargs)
         if resp.status_code != expected:
             try:
                 data = resp.json()
