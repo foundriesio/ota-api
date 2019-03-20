@@ -4,6 +4,8 @@ from flask import (
     Blueprint, abort, current_app, jsonify, make_response, request
 )
 
+from ota_api.sota_toml import sota_toml_fmt
+
 blueprint = Blueprint('devices', __name__, url_prefix='/devices')
 
 
@@ -94,11 +96,16 @@ def post():
     user = current_app.OTAUser()
 
     user.assert_device_quota()
+
+    overrides = data.get('overrides', {})
+    overrides.setdefault(
+        'provision', {}).setdefault('primary_ecu_hardware_id', hwid)
+
     client_pem = user.device_cert_create(name, uuid, csr)
     user.device_create(name, uuid, client_pem)
     r = jsonify({
         'root.crt': user.server_ca,
-        'sota.toml': user.device_toml(hwid),
+        'sota.toml': sota_toml_fmt(overrides=overrides),
         'client.pem': client_pem,
     })
     r.status_code = 201

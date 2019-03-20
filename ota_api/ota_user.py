@@ -5,44 +5,9 @@ import string
 from flask import abort, jsonify, make_response, request
 
 from ota_api.ota_ce import OTACommunityEditionAPI
-from ota_api.settings import GATEWAY_SERVER
+from ota_api.sota_toml import sota_toml_fmt
 
 VALID_DEVICE_CHAR = set(string.ascii_letters + string.digits + '-' + '_' + '/')
-
-SOTA_TOML_FMT = '''
-[tls]
-server = "{gateway_server}"
-ca_source = "file"
-pkey_source = "file"
-cert_source = "file"
-
-[provision]
-server = "{gateway_server}"
-primary_ecu_hardware_id = "{hardware_id}"
-p12_password = ""
-expiry_days = "36000"
-provision_path = ""
-
-[uptane]
-polling = true
-director_server = "{gateway_server}/director"
-repo_server = "{gateway_server}/repo"
-key_source = "file"
-
-[pacman]
-type = "ostree"
-ostree_server = "{gateway_server}/treehub"
-packages_file = "/usr/package.manifest"
-
-[storage]
-type = "sqlite"
-path = "/var/sota/"
-
-[import]
-tls_cacert_path = "/var/sota/root.crt"
-tls_pkey_path = "/var/sota/pkey.pem"
-tls_clientcert_path = "/var/sota/client.pem"
-'''
 
 
 class OTAUserBase(object):
@@ -129,11 +94,6 @@ class OTAUserBase(object):
     def device_create(self, name, uuid, client_pem):
         api = OTACommunityEditionAPI('default')
         api.device_create(name, uuid, client_pem)
-
-    def device_toml(self, hardware_id):
-        """Return the sota.toml needed by aktualizr."""
-        return SOTA_TOML_FMT.format(
-            gateway_server=GATEWAY_SERVER, hardware_id=hardware_id)
 
     def device_cert_create(self, name, uuid, csr):
         """Create a certificate with your CA based on the incoming Certificate
