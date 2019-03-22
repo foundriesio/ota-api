@@ -5,7 +5,6 @@ import string
 from flask import abort, jsonify, make_response, request
 
 from ota_api.ota_ce import OTACommunityEditionAPI
-from ota_api.sota_toml import sota_toml_fmt
 
 VALID_DEVICE_CHAR = set(string.ascii_letters + string.digits + '-' + '_' + '/')
 

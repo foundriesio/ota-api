@@ -11,46 +11,49 @@ SotaConfigCommon = namedtuple('SotaConfigCommon', 'gateway_server')
 # values.
 SOTA_CONFIG_COMMON = SotaConfigCommon(GATEWAY_SERVER)
 
-# Default SOTA configuration. This is not a complete aktualizr
-# configuration file
-SOTA_CONFIG = OrderedDict([
-    ("tls",
-     OrderedDict([("server", '"{common.gateway_server}"'),
-                  ("ca_source", '"file"'),
-                  ("pkey_source", '"file"'),
-                  ("cert_source", '"file"')])),
 
-    ("provision",
-     OrderedDict([("server", '"{common.gateway_server}"'),
-                  ("p12_password", '""'),
-                  ("expiry_days", '"36000"'),
-                  ("provision_path", '""'),
-                  ("primary_ecu_hardware_id", None)])),
+def _mk_config():
+    # Default SOTA configuration. This is not a complete aktualizr
+    # configuration file
+    return OrderedDict([
+        ("tls",
+         OrderedDict([("server", '"{common.gateway_server}"'),
+                      ("ca_source", '"file"'),
+                      ("pkey_source", '"file"'),
+                      ("cert_source", '"file"')])),
 
-    ("uptane",
-     OrderedDict([("polling", 'true'),
-                  ("director_server", '"{common.gateway_server}/director"'),
-                  ("repo_server", '"{common.gateway_server}/repo"'),
-                  ("key_source", '"file"')])),
+        ("provision",
+         OrderedDict([("server", '"{common.gateway_server}"'),
+                      ("p12_password", '""'),
+                      ("expiry_days", '"36000"'),
+                      ("provision_path", '""'),
+                      ("primary_ecu_hardware_id", None)])),
 
-    ("pacman",
-     OrderedDict([("type", '"ostree"'),
-                  ("ostree_server", '"{common.gateway_server}/treehub"'),
-                  ("packages_file", '"/usr/package.manifest"')])),
+        ("uptane",
+         OrderedDict([("polling", 'true'),
+                      ("director_server",
+                       '"{common.gateway_server}/director"'),
+                      ("repo_server", '"{common.gateway_server}/repo"'),
+                      ("key_source", '"file"')])),
 
-    ("storage",
-     OrderedDict([("type", '"sqlite"'),
-                  ("path", '"/var/sota/"')])),
+        ("pacman",
+         OrderedDict([("type", '"ostree"'),
+                      ("ostree_server", '"{common.gateway_server}/treehub"'),
+                      ("packages_file", '"/usr/package.manifest"')])),
 
-    ("import",
-     OrderedDict([("tls_cacert_path", '"/var/sota/root.crt"'),
-                  ("tls_pkey_path", '"/var/sota/pkey.pem"'),
-                  ("tls_clientcert_path", '"/var/sota/client.pem"')])),
-])
+        ("storage",
+         OrderedDict([("type", '"sqlite"'),
+                      ("path", '"/var/sota/"')])),
+
+        ("import",
+         OrderedDict([("tls_cacert_path", '"/var/sota/root.crt"'),
+                      ("tls_pkey_path", '"/var/sota/pkey.pem"'),
+                      ("tls_clientcert_path", '"/var/sota/client.pem"')])),
+    ])
 
 
 def sota_toml_fmt(common=SOTA_CONFIG_COMMON, overrides=None):
-    d = OrderedDict(SOTA_CONFIG)
+    d = _mk_config()
     if overrides:
         for section in overrides:
             if section not in d:
