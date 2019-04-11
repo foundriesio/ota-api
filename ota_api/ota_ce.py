@@ -167,6 +167,18 @@ class OTACommunityEditionAPI(object):
                 device['uuid'], update))
         return {'cur-image': cur_image, 'target-image': data}
 
+    def device_install_history(self, device, offset, limit):
+        return self.registry.get(
+            '/api/v1/devices/%s/installation_history' % device['uuid'],
+            params={'offset': offset, 'limit': limit}
+        ).json()
+
+    def device_install_get(self, device, correlation_id):
+        events = self.registry.get(
+            '/api/v1/devices/%s/events' % device['uuid']).json()
+        return [e for e in events
+                if e.get('payload', {}).get('correlationId') == correlation_id]
+
     def device_delete(self, device):
         self.registry.delete('/api/v1/devices/' + device['uuid'])
 

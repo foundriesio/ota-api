@@ -43,6 +43,12 @@ API with commands like:
   # List updates available to a device:
   curl -H "OTA-TOKEN: foo" http://localhost:5000/devices/<DEVICE>/updates/
 
+  # List install history of device
+  curl -H "OTA-TOKEN: foo" http://localhost:5000/devices/<DEVICE>/history/
+
+  # Get the details of an install
+  curl -H "OTA-TOKEN: foo" http://localhost:5000/devices/<DEVICE>/history/<correlationId>/
+
   # Delete a device:
   curl -H "OTA-TOKEN: foo" -X DELETE http://localhost:5000/devices/<DEVICE>/
 

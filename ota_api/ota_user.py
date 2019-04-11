@@ -67,6 +67,16 @@ class OTAUserBase(object):
         u = api.device_updates(d)
         return sorted(u, reverse=True, key=lambda x: x['custom']['updatedAt'])
 
+    def device_install_history(self, name):
+        api, d = self._get(name)
+        offset = request.args.get('offset', 0)
+        limit = request.args.get('limit', 50)
+        return api.device_install_history(d, offset, limit)
+
+    def device_install_get(self, name, correlation_id):
+        api, d = self._get(name)
+        return api.device_install_get(d, correlation_id)
+
     def device_update(self, name, image_hash):
         api, d = self._get(name)
         return api.device_update(d, image_hash)

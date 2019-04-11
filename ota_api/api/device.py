@@ -31,6 +31,18 @@ def packages(name):
     return jsonify(user.device_packages(name))
 
 
+@blueprint.route('/<name>/history/')
+def install_list(name):
+    user = current_app.OTAUser()
+    return jsonify(user.device_install_history(name))
+
+
+@blueprint.route('/<name>/history/<correlation_id>/')
+def install_get(name, correlation_id):
+    user = current_app.OTAUser()
+    return jsonify(user.device_install_get(name, correlation_id))
+
+
 @blueprint.route('/<name>/updates/')
 def updates(name):
     user = current_app.OTAUser()
