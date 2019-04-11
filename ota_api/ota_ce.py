@@ -184,7 +184,8 @@ class OTACommunityEditionAPI(object):
 
     def device_create(self, name, uuid, client_pem):
         data = {
-            'deviceUuid': uuid,
+            'uuid': uuid,        # newer versions use this
+            'deviceUuid': uuid,  # older versions use this
             'deviceId': name,
             'deviceName': name,
             'deviceType': 'Other',
