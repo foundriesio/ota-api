@@ -112,6 +112,13 @@ class OTACommunityEditionAPI(object):
             # race condition, we need to probe our status again to be safe
             # i'm cheating for now
             return 'OK/TODO'
+
+        # This is kind of dirty as a side-effect to "device" probably isn't
+        # explected, but its the most efficient way to get this information
+        # to bubble up
+        cid = q[0].get('correlationId')
+        if cid:
+            device['correlationId'] = cid
         for k, v in q[0]['targets'].items():
             return 'Updating to ' + v['image']['filepath']
 
