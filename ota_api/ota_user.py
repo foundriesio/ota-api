@@ -18,7 +18,7 @@ class OTAUserBase(object):
     def assert_device_quota(self):
         """Ensure that creating another device is allowed."""
         maxd = self.max_devices
-        if maxd > 0 and len(list(self.device_list())) > maxd:
+        if maxd > 0 and len(list(self.device_list())) >= maxd:
             message = 'MAX_DEVICES(%d) exceeded' % self.max_devices
             abort(make_response(jsonify(message=message), 403))
 
