@@ -187,7 +187,11 @@ class OTACommunityEditionAPI(object):
                 if e.get('payload', {}).get('correlationId') == correlation_id]
 
     def device_delete(self, device):
-        self.registry.delete('/api/v1/devices/' + device['uuid'])
+        try:
+            self.registry.delete('/api/v1/devices/' + device['uuid'])
+        except HTTPException as e:
+            if e.response.status_code != 202:
+                raise e
 
     def device_create(self, name, uuid, client_pem):
         data = {

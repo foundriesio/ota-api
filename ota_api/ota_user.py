@@ -4,6 +4,7 @@ import string
 
 from flask import abort, jsonify, make_response, request
 
+from ota_api.deleted_hack import device_is_deleted, device_mark_deleted
 from ota_api.ota_ce import OTACommunityEditionAPI
 
 VALID_DEVICE_CHAR = set(string.ascii_letters + string.digits + '-' + '_' + '/')
@@ -99,8 +100,12 @@ class OTAUserBase(object):
     def device_delete(self, name):
         api, d = self._get(name)
         api.device_delete(d)
+        device_mark_deleted(d['uuid'])
 
     def device_create(self, name, uuid, client_pem):
+        if device_is_deleted(uuid):
+            message = 'A device with this uuid has been deleted.'
+            abort(make_response(jsonify(message=message), 400))
         api = OTACommunityEditionAPI('default')
         api.device_create(name, uuid, client_pem)
 
